@@ -9,6 +9,7 @@ from app import app
 from flask import render_template, request, redirect, url_for, flash, session, abort, jsonify
 from werkzeug.utils import secure_filename
 
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 ###
 # Routing for your application.
@@ -41,6 +42,26 @@ def add_file():
         return redirect(url_for('home'))
 
     return render_template('add_file.html')
+
+@app.route('/filelisting')
+def show_file():
+    lst = []
+    pic =[]
+    rootdir = os.getcwd()
+    print rootdir
+    for subdir, dirs, files in os.walk('./app/static/uploads'):
+        for file in files:
+            if file and allowed_file(file):
+                pic.append(str(file))
+            else:
+                lst.append(os.path.join(subdir, file))
+        return render_template('show_file.html', apples = lst, pics = pic)
+    return render_template('show_file.html')
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():

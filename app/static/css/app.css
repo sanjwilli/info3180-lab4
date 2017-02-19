@@ -6,3 +6,7 @@ body {
   width: 600px;
   margin: 0 auto;
 }
+
+ul li img {
+	height: 250px;
+}
